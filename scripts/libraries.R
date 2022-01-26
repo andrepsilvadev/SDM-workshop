@@ -10,3 +10,6 @@ packages("plyr","tidyverse","RangeShiftR","grid","raster","RColorBrewer",
 
 
 
+packages("readr","ggplot2",
+         "rworldmap",
+         "rgbif","biomod2","raster", prompt = FALSE) 
