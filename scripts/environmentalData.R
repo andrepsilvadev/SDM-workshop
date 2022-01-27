@@ -22,6 +22,7 @@ plot(r_crop)
 
 # check correlation between environmental variables
 corr <- raster::layerStats(r_crop, 'pearson', na.rm=T)
+corr
 env_vars <- raster::dropLayer(r_crop, "bio11")
 env_vars <- raster::stack(env_vars)
 env_vars

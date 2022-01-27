@@ -15,8 +15,8 @@ gbifData <- occ_search(taxonKey = key,
                        year = date,
                        limit = 100000)
 gbifData$data
-readr::write_csv(gbifData$data,
-          file = "./data/gbifData_20220126") # write as csv to avoid running this step all the time
+#readr::write_csv(gbifData$data,
+#          file = "./data/gbifData_20220126") # write as csv to avoid running this step all the time
 #gbifData <- readr::read_csv("./data/gbifDataFull_20200918.csv") # gbif
 
 # alternatively you may want to load the data directly from your files

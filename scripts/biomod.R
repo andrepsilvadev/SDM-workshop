@@ -26,7 +26,7 @@ myBiomodModelOut <- BIOMOD_Modeling(
   myBiomodData,
   models = c('GLM', 'GBM'), #'MAXENT.Phillips'
   models.options = myBiomodOption,
-  NbRunEval = 3,
+  NbRunEval = 2,
   DataSplit = 70,
   Prevalence = 0.5,
   VarImport = 3,
@@ -56,8 +56,8 @@ myBiomodEM <- BIOMOD_EnsembleModeling(
   modeling.output = myBiomodModelOut,
   chosen.models = 'all',
   em.by='all',
-  eval.metric = c('TSS'),
-  eval.metric.quality.threshold = c(0.7))
+  eval.metric = c('ROC'),
+  eval.metric.quality.threshold = c(0.9))
 
 # project models in space
 myBiomodProjTime <- BIOMOD_Projection(modeling.output = myBiomodModelOut,
