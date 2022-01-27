@@ -2,7 +2,7 @@
 ## Author: Andre P. Silva ##
 ## Date: January 26th, 2022 ##
 
-
+# download environmental data
 r <- raster::getData("worldclim", var="bio", res=10) # what is the most adequate resolution? #resolution is in degrees
 plot(r)
 #BIO10 = Mean Temperature of Warmest Quarter
@@ -17,8 +17,8 @@ extent <- raster::extent(50, 140, -10, 40) #(xmin, xmax, ymin, ymax)
 r_crop <- raster::crop(subset_clim, extent)
 plot(r_crop)
 
-b1 <- Raster::stackApply(r_crop, indices=c(1,2), fun=function(x){x/10}) # error here
-b1 <- raster::stackApply(s, indices=c(1,1,1,2,2,2), fun=sum)
+#b1 <- raster::stackApply(r_crop, indices=c(1,2), fun=function(x){x/10}) # error here
+#b1 <- raster::stackApply(s, indices=c(1,1,1,2,2,2), fun=sum)
 
 # check correlation between environmental variables
 corr <- raster::layerStats(r_crop, 'pearson', na.rm=T)

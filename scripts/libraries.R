@@ -1,15 +1,9 @@
 ## libraries ##
 ## Andre P. Silva ##
-## November 17th, 2020 ##
+## January 26th, 2022 ##
 
+#install.packages("easypackages")
 library(easypackages)
-packages("plyr","tidyverse","RangeShiftR","grid","raster","RColorBrewer",
-         "rasterVis","latticeExtra","viridis","gridExtra","ncdf4",
-         "rgbif","readr","biomod2", "foreign","remotes","traitdata",
-         "sf","ggplot2","magrittr", prompt = FALSE) # use with container
-
-
-
-packages("readr","ggplot2",
-         "rworldmap",
-         "rgbif","biomod2","raster", prompt = FALSE) 
+packages("readr","ggplot2","RColorBrewer",
+         "rworldmap","sp","raster",
+         "rgbif","biomod2", prompt = FALSE) 

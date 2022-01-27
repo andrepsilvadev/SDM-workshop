@@ -17,15 +17,15 @@ gbifData <- occ_search(taxonKey = key,
 gbifData$data
 readr::write_csv(gbifData$data,
           file = "./data/gbifData_20220126") # write as csv to avoid running this step all the time
-gbifData <- readr::read_csv("./data/gbifDataFull_20200918.csv") # gbif
+#gbifData <- readr::read_csv("./data/gbifDataFull_20200918.csv") # gbif
 
 # alternatively you may want to load the data directly from your files
-cats <- read_csv("./data/cats_RD.csv")
-head(cats)###################### ERROR HERE 
+#cats <- read_csv("./data/cats_RD.csv")
+#head(cats)###################### ERROR HERE 
 
 # visualize number of locations
-p <- ggplot(gbifData$data, aes(x=species)) +
-  geom_histogram(stat="count")
+(p <- ggplot(gbifData$data, aes(x=species)) +
+  geom_histogram(stat="count"))
 
 # plot in world map
 worldmap <- rworldmap::getMap(resolution = "coarse")
