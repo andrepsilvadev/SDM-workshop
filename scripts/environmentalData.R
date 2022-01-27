@@ -23,34 +23,61 @@ b1 <- raster::stackApply(s, indices=c(1,1,1,2,2,2), fun=sum)
 # check correlation between environmental variables
 corr <- raster::layerStats(r_crop, 'pearson', na.rm=T)
 env_vars <- raster::dropLayer(r_crop, "bio11")
+env_vars <- raster::stack(env_vars)
 env_vars
 
+# join species and environmental data
+targetspecies <- unique(gbifData$data$species)
+emptystack <- raster::stack()
+for(i in 1:length(targetspecies)){
+  subset <- gbifData$data %>% dplyr::filter(species == targetspecies[i])
+  xy <- data.frame(x=subset$decimalLongitude,
+                   y=subset$decimalLatitude)
+  spRaster <- rasterize(xy, env_vars, fun='count')
+  emptystack <- addLayer(emptystack, spRaster)
+}
+plot(emptystack)
+names(emptystack) <- unique(gbifData$data$species)
+plot(emptystack)
+# reclassify species raster
+m <- c(NA, NA, 0, 0, +Inf, 1)
+(rclmat <- matrix(m, ncol=3, byrow=TRUE)) # criteria for reclassification
+rc <- reclassify(emptystack, rclmat)
+plot(rc)
+spStack <- rc # just changing stack name
 
-# this step is not necessary to run the SDMs - other analyses or exploratory
-xy <- data.frame(x=gbifData$data$decimalLongitude,
-                 y=gbifData$data$decimalLatitude)
-head(xy)
+full_data <- stack(spStack, env_vars)
+plot(full_data)
 
-extract_data <- raster::extract(env_vars, # raster or rasterstack
-                            xy, # coordinates
+xylandscape <- raster::coordinates(env_vars) 
+colnames(xylandscape) <- c("X_WGS84","Y_WGS84") # to math with biomod script
+sdm_data <- raster::extract(full_data, # raster or rasterstack
+                            xylandscape, # landscape coordinates
                             method='simple', # or "bilinear" - value of the four nearest raster cells
                             buffer=NULL, # in meters (long lat) or map_units
                             small=FALSE,
                             cellnumbers=TRUE,
                             na.rm=TRUE,
                             df=TRUE) # return dataframe
-head(extract_data)
-nrow(extract_data)
+sdm_data
+sdm_data <- cbind(xylandscape, sdm_data) #join cell coordinates
+head(sdm_data)
+nrow(sdm_data)
+sdm_data <- sdm_data %>% tidyr::drop_na()
+sdm_data
+nrow(sdm_data)
+# not needed juts to double check
+unique(sdm_data$Prionailurus.bengalensis)
+unique(sdm_data$Prionailurus.rubiginosus)
+unique(sdm_data$Prionailurus.viverrinus)
+unique(sdm_data$Prionailurus.planiceps)
+sum(sdm_data$Prionailurus.bengalensis)
+sum(sdm_data$Prionailurus.rubiginosus)
+sum(sdm_data$Prionailurus.viverrinus)
+sum(sdm_data$Prionailurus.planiceps)
 
-full_data <- data.frame(species = gbifData$data$species,
-                       lat = gbifData$data$decimalLatitude,
-                       long = gbifData$data$decimalLongitude,
-                       cells = extract_data$cells ,
-                       bio10 = extract_data$bio10,
-                       bio12 = extract_data$bio12)
+## exploring a bit to get to know the data set
+#ggplot(full_data, aes(x=bio10, y=cells, colour=species)) +
+#  geom_point()
 
-head(full_data)
-# exploring a bit to get to know the data set
-ggplot(full_data, aes(x=bio10, y=cells, colour=species)) +
-  geom_point()
 

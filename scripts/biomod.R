@@ -2,36 +2,35 @@
 ## Andre P. Silva ##
 ## January 26th, 2021 ##
 
-needs another format landscape zeros AND ONES
-
-DataSpecies <- full_data[c("species", "lat", "long")]
-head(DataSpecies)
-
+# data setup
+DataSpecies <- sdm_data #just changing name to match biomod script
+myRespName <- "Prionailurus.bengalensis"
 myResp <- as.numeric(DataSpecies[,myRespName])
+head(myResp)
+length(myResp)
+unique(myResp)
 myRespCoord = DataSpecies[,c("X_WGS84","Y_WGS84")]
-### Initialisation
+head(myRespCoord)
+nrow(myRespCoord)
+
+# Initialisation
 myBiomodData <- BIOMOD_FormatingData(resp.var = myResp,
-                                     expl.var = EVs.calibration,
+                                     expl.var = env_vars,
                                      resp.xy = myRespCoord,
                                      resp.name = myRespName)
 
 myBiomodOption <- BIOMOD_ModelingOptions(
-  #MAXENT.Phillips = list(path_to_maxent.jar = getwd()))
-  MAXENT.Phillips = list(path_to_maxent.jar = 'Z:/MechSpatCons/data/spatial/SDMoutput/maxent.jar'))
+  MAXENT.Phillips = list(path_to_maxent.jar = getwd()))
 
 myBiomodModelOut <- BIOMOD_Modeling(
   myBiomodData,
-  models = c('GLM', 'RF','GBM'), # "MAXENT.Phillips"
+  models = c('GLM', 'MAXENT.Phillips'), 
   models.options = myBiomodOption,
   NbRunEval = 10,
   DataSplit = 70,
   Prevalence = 0.5,
   VarImport = 3,
-  models.eval.meth = c('TSS','ROC'),
-  SaveObj = TRUE,
-  rescal.all.models = FALSE, # see what this is about
-  do.full.models = FALSE,
-  modeling.id = paste(myRespName, "FirstModeling", sep=""))
+  models.eval.meth = c('TSS','ROC'))
 
 get_evaluations(myBiomodModelOut)
 
@@ -45,27 +44,20 @@ myBiomodEM <- BIOMOD_EnsembleModeling(
   chosen.models = 'all',
   em.by='all',
   eval.metric = c('TSS'),
-  eval.metric.quality.threshold = c(0.7), 
-  prob.mean = T,
-  prob.cv = T,
-  prob.ci = T,
-  prob.ci.alpha = 0.05,
-  prob.median = T,
-  committee.averaging = T,
-  prob.mean.weight = T,
-  prob.mean.weight.decay = 'proportional')
+  eval.metric.quality.threshold = c(0.7))
 
 # Make ensemble-models projections on current variable
 myBiomodEF <- BIOMOD_EnsembleForecasting(
   EM.output = myBiomodEM,
-  projection.output = myBiomodProjTime,
-  new.env = NULL,
-  xy.new.env = NULL,
-  selected.models = 'all',
-  proj.name = NULL,
-  binary.meth = NULL,
-  filtered.meth = NULL,
-  compress = TRUE)
+  projection.output = env_vars)
+
+
+plot(myBiomodEF)
+
+
+
+
+
 
 
 
