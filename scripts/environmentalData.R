@@ -27,7 +27,7 @@ env_vars <- raster::dropLayer(r_crop, "bio11")
 env_vars <- raster::stack(env_vars)
 env_vars
 
-# join species and environmental data
+# rasterize species occurrences and join environmental data
 targetspecies <- unique(gbifData$data$species)
 emptystack <- raster::stack()
 for(i in 1:length(targetspecies)){
@@ -81,4 +81,19 @@ sum(sdm_data$Prionailurus.planiceps)
 #ggplot(full_data, aes(x=bio10, y=cells, colour=species)) +
 #  geom_point()
 
+# Environmental Data for future climatic conditions 
+# (think carefully about the model you select, also check CMIP6 climate data)
+bio_Rcp26_70 <- raster::getData('CMIP5', var='bio', res=10, rcp=26, model='MI', year=70)# best case scenario
+bio_Rcp26_70 <- bio_Rcp26_70[[c("mi26bi7010","mi26bi7012")]] # subset target climatic variables 
+bio_Rcp26_70 <- raster::stack(crop(bio_Rcp26_70, extent)) # crop to our study site
+names(bio_Rcp26_70)
+names(bio_Rcp26_70) <- c("bio10","bio12")
+names(bio_Rcp26_70)
+plot(bio_Rcp26_70)
+
+bio_Rcp85_70 <- raster::getData('CMIP5', var='bio', res=10, rcp=85, model='MI', year=70) # worst case scenario
+bio_Rcp85_70 <- bio_Rcp85_70[[c("mi85bi7010","mi85bi7012")]]
+bio_Rcp85_70 <- raster::stack(crop(bio_Rcp85_70, extent))
+names(bio_Rcp85_70) <- c("bio10","bio12")
+plot(bio_Rcp85_70)
 
