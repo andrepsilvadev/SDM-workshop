@@ -33,7 +33,8 @@ myBiomodModelOut <- BIOMOD_Modeling(
   VarImport = 3,
   models.eval.meth = c('TSS','ROC'))
 
-plot(myBiomodModelOut)
+
+## start here
 
 # Building ensemble-models
 myBiomodEM <- BIOMOD_EnsembleModeling(
@@ -56,7 +57,7 @@ myBiomodCurrent <- BIOMOD_Projection(modeling.output = myBiomodModelOut,
                                      proj.name = "current",
                                      selected.models = 'all',
                                      binary.meth = 'TSS')
-#plot(myBiomodCurrent)
+plot(myBiomodCurrent)
 
 # ensemble-models projections on current environment
 myBiomodEFCurrent <- BIOMOD_EnsembleForecasting(EM.output = myBiomodEM,
@@ -89,30 +90,10 @@ myBiomodEFRcp85_70 <- BIOMOD_EnsembleForecasting(
   projection.output = myBiomodRcp85_70)
 plot(myBiomodEFRcp85_70)
 
-
-# Model evaluation
-## get AUC and TSS
-get_evaluations(myBiomodModelOut)
-
-## see what variables influence more AUC
-get_variables_importance(myBiomodModelOut)
-
-## species relationship with environmental variables
-response.plot2(models = BIOMOD_LoadModels(myBiomodModelOut, models='GLM'),
-               Data = get_formal_data(myBiomodModelOut,'expl.var'),
-               show.variables= get_formal_data(myBiomodModelOut,'expl.var.names'),
-               do.bivariate = FALSE,
-               fixed.var.metric = 'median',
-               col = brewer.pal(10, "Spectral"),
-               legend = TRUE,
-               data_species = get_formal_data(myBiomodModelOut,'resp.var'))
-
-
-
 # plot ensemble forecasts
 ## load models manually 
 list_projCurrent <- list.files("Prionailurus.bengalensis/proj_current/individual_projections", full.names = TRUE)
-(list_proj <- grep("grd", list_proj, value=TRUE))
+(list_proj <- grep("grd", list_projCurrent, value=TRUE))
 Pbcurrent <- raster::stack(list_proj)
 names(Pbcurrent) <- grep("grd", list_proj, value=TRUE)
 plot(Pbcurrent)
@@ -140,3 +121,20 @@ names(Pbforecast) <- c("Pb_suitability_current",
                        "Pb_suitability_Rcp85_70")
 plot(Pbforecast) # typical final output map for your paper
 
+
+# Model evaluation
+## get AUC and TSS
+get_evaluations(myBiomodModelOut)
+
+## see what variables influence more AUC
+get_variables_importance(myBiomodModelOut)
+
+## species relationship with environmental variables
+response.plot2(models = BIOMOD_LoadModels(myBiomodModelOut, models='GLM'),
+               Data = get_formal_data(myBiomodModelOut,'expl.var'),
+               show.variables= get_formal_data(myBiomodModelOut,'expl.var.names'),
+               do.bivariate = FALSE,
+               fixed.var.metric = 'median',
+               col = brewer.pal(10, "Spectral"),
+               legend = TRUE,
+               data_species = get_formal_data(myBiomodModelOut,'resp.var'))
