@@ -36,6 +36,6 @@ plot(worldmap, col = "lightgrey",
 maps::map.axes()
 points(gbifData$data$decimalLongitude, gbifData$data$decimalLatitude, 
        col = brewer.pal(4,"Spectral"), cex = 1)
-legend(120, 30, legend=unique(gbifData$data$species)) #not working
+#legend(120, 30, legend=unique(gbifData$data$species)) #not working
 
 
