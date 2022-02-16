@@ -25,7 +25,7 @@ myBiomodData <- BIOMOD_FormatingData(resp.var = myResp,
 # Run individual models
 myBiomodModelOut <- BIOMOD_Modeling(
   myBiomodData,
-  models = c('GLM', 'GBM'), #'MAXENT.Phillips'
+  models = c('GLM', 'GBM','MAXENT.Phillips'), #'MAXENT.Phillips'
   models.options = NULL, #myBiomodOption
   NbRunEval = 2,
   DataSplit = 70,

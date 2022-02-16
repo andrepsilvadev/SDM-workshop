@@ -9,7 +9,7 @@
 region <- c("CN;KH;BT;BD;IN;TH;MM;LA;VN;ID;MY;NP")
 date <- '1970,2020'
 # search data
-gbifData <- occ_search(taxonKey = key,
+gbifData <- rgbif::occ_search(taxonKey = key,
                        country = region,
                        hasCoordinate = TRUE,
                        year = date,
