@@ -33,9 +33,6 @@ myBiomodModelOut <- BIOMOD_Modeling(
   VarImport = 3,
   models.eval.meth = c('TSS','ROC'))
 
-
-## start here
-
 # Building ensemble-models
 myBiomodEM <- BIOMOD_EnsembleModeling(
   modeling.output = myBiomodModelOut,
