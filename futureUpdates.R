@@ -10,6 +10,9 @@ commit from R
 
 ### basic project folder structure ----------------------------------------------------
 
+do not change folder structure
+
+
 data
 spatialData
 scripts
